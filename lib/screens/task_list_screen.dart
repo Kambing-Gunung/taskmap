@@ -44,15 +44,35 @@ class _TaskListScreenState extends State<TaskListScreen> {
               itemCount: _tasks.length,
               itemBuilder: (context, index) {
                 final task = _tasks[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: ListTile(
-                    title: Text(task.title),
-                    subtitle: Text('${task.category} • ${task.status}'),
+
+                return Dismissible(
+                  key: Key(task.id.toString()),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Icon(Icons.delete, color: Colors.white),
+                  ),
+                  onDismissed: (direction) async {
+                    await _taskService.deleteTask(task.id!);
+                    _loadTasks();
+
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Task dihapus')));
+                  },
+                  child: Card(
+                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: ListTile(
+                      title: Text(task.title),
+                      subtitle: Text('${task.category} • ${task.status}'),
+                    ),
                   ),
                 );
               },
             ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _goToAddTask,
         child: Icon(Icons.add),
