@@ -1,24 +1,28 @@
 class Task {
   int? id;
-  int userId; // foreign key ke tabel users
+  int userId;
   String title;
   String description;
   String category;
   String status;
-  String date;
-  double latitude;
-  double longitude;
+
+  String createdAt;
+  String? deadline;
+
+  double? latitude;
+  double? longitude;
 
   Task({
     this.id,
-    required this.userId, // foreign key ke tabel users
+    required this.userId,
     required this.title,
     required this.description,
     required this.category,
     required this.status,
-    required this.date,
-    required this.latitude,
-    required this.longitude,
+    required this.createdAt,
+    this.deadline,
+    this.latitude,
+    this.longitude,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,10 +33,37 @@ class Task {
       'description': description,
       'category': category,
       'status': status,
-      'date': date,
+      'createdAt': createdAt,
+      'deadline': deadline,
       'latitude': latitude,
       'longitude': longitude,
     };
+  }
+
+  Task copyWith({
+    int? id,
+    int? userId,
+    String? title,
+    String? description,
+    String? category,
+    String? status,
+    String? createdAt,
+    String? deadline,
+    double? latitude,
+    double? longitude,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      deadline: deadline ?? this.deadline,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+    );
   }
 
   factory Task.fromMap(Map<String, dynamic> map) {
@@ -43,7 +74,8 @@ class Task {
       description: map['description'],
       category: map['category'],
       status: map['status'],
-      date: map['date'],
+      createdAt: map['createdAt'],
+      deadline: map['deadline'],
       latitude: map['latitude'],
       longitude: map['longitude'],
     );

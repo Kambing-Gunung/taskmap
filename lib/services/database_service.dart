@@ -43,7 +43,8 @@ class DatabaseService {
         description TEXT,
         category TEXT,
         status TEXT,
-        date TEXT,
+        createdAt TEXT,
+        deadline TEXT,
         latitude REAL,
         longitude REAL
       )
