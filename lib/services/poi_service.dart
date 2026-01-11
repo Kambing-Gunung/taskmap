@@ -20,13 +20,16 @@ class POIService {
       node["amenity"="atm"](around:$radius,$lat,$lng);
       node["amenity"="school"](around:$radius,$lat,$lng);
     );
-    out body;
+    out body 40;
     ''';
 
-    final response = await http.post(
-      Uri.parse(_endpoint),
-      body: {'data': query},
-    );
+    final response = await http
+        .post(Uri.parse(_endpoint), body: {'data': query})
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      throw Exception('Overpass error ${response.statusCode}');
+    }
 
     if (response.statusCode != 200) {
       throw Exception('Gagal mengambil POI');

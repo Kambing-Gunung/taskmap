@@ -27,35 +27,60 @@ class _MapsScreenState extends State<MapsScreen> {
   bool _loadingPOI = true;
 
   LatLng _currentCenter = LatLng(-6.175392, 106.827153);
+  LatLng? _lastPOICenter;
 
   @override
   void initState() {
     super.initState();
     _loadTasks();
+    _setCurentCenter();
     _loadPOI();
   }
 
   Timer? _poiDebounce;
 
   void _debouncedFetchPOI() {
+    if (_lastPOICenter != null) {
+      final distance = const Distance().as(
+        LengthUnit.Meter,
+        _lastPOICenter!,
+        _currentCenter,
+      );
+
+      if (distance < 300) return; // geser dikit → skip
+    }
+
+    _lastPOICenter = _currentCenter;
+
     _poiDebounce?.cancel();
-    _poiDebounce = Timer(const Duration(milliseconds: 800), () {
-      _loadPOI();
-    });
+    _poiDebounce = Timer(const Duration(milliseconds: 800), _loadPOI);
+  }
+
+  Future<void> _setCurentCenter() async {
+    if (_tasksWithLocation.isNotEmpty) {
+      final firstTask = _tasksWithLocation.first;
+      setState(() {
+        _currentCenter = LatLng(firstTask.latitude!, firstTask.longitude!);
+        _mapController.move(_currentCenter, 15);
+      });
+    }
   }
 
   Future<void> _loadPOI() async {
+    setState(() => _loadingPOI = true);
+
     try {
       _pois = await POIService.fetchPOIs(
         lat: _currentCenter.latitude,
         lng: _currentCenter.longitude,
-        // radius: 1000,
       );
     } catch (e) {
       debugPrint('POI error: $e');
     }
 
-    setState(() => _loadingPOI = false);
+    if (mounted) {
+      setState(() => _loadingPOI = false);
+    }
   }
 
   // final List<POI> dummyPOIs = [
@@ -210,6 +235,25 @@ class _MapsScreenState extends State<MapsScreen> {
               );
             }).toList(),
           ),
+
+          if (_pois.isEmpty && !_loadingPOI)
+            Positioned(
+              bottom: 20,
+              left: 20,
+              right: 20,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  'POI tidak tersedia saat ini',
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
 
           if (_loadingPOI)
             const Positioned(
