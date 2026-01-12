@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../services/task_service.dart';
+import '../services/session_service.dart';
 import '../models/task.dart';
 import '../screens/add_task_screen.dart';
 import '../screens/detail_task_screen.dart';
+import '../screens/login_screen.dart';
 import '../widgets/bottom_nav.dart';
 
 class TaskListScreen extends StatefulWidget {
@@ -22,34 +24,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
     _loadTasks();
   }
 
-  // Future<void> _updateStatus(Task task, String newStatus) async {
-  //   final updatedTask = Task(
-  //     id: task.id,
-  //     userId: task.userId,
-  //     title: task.title,
-  //     description: task.description,
-  //     category: task.category,
-  //     status: newStatus,
-  //     createdAt: task.createdAt,
-  //     deadline: task.deadline,
-  //     latitude: task.latitude,
-  //     longitude: task.longitude,
-  //   );
-
-  //   await _taskService.updateTask(updatedTask);
-  //   _loadTasks();
-  // }
-
   Future<void> _loadTasks() async {
     final data = await _taskService.getTasks();
     setState(() {
       _tasks = data;
     });
   }
-
-  // void _showSnack(String text) {
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
-  // }
 
   void _goToAddTask() async {
     await Navigator.push(
@@ -69,6 +49,20 @@ class _TaskListScreenState extends State<TaskListScreen> {
           fontWeight: FontWeight.bold,
         ),
         backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            color: Colors.white,
+            onPressed: () async {
+              await SessionService.clearSession();
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: _tasks.isEmpty
           ? const Center(child: Text('Belum ada task'))

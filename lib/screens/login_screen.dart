@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../screens/task_list_screen.dart';
-import '../services/user_service.dart';
 import '../models/user.dart';
+import '../services/user_service.dart';
+import '../services/session_service.dart';
+import 'task_list_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,94 +12,70 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  final UserService _userService = UserService();
+  final _userService = UserService();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
-  // =====================
-  // LOGIN LOGIC
-  // =====================
   Future<void> _login() async {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
-      _showSnackBar('Mohon isi Username dan Password', Colors.red);
+      _showError('Username dan password wajib diisi');
       return;
     }
 
-    setState(() => _isLoading = true);
+    final users = await _userService.getUsers();
+    final existingUser = users.where((u) => u.email == username).toList();
 
-    try {
-      final existingUser = await _userService.getUserByEmail(username);
+    // USER BARU
+    if (existingUser.isEmpty) {
+      final newUser = User(name: username, email: username, password: password);
 
-      // ======================
-      // USER BELUM ADA → BUAT BARU
-      // ======================
-      if (existingUser == null) {
-        final newUser = User(
-          name: username.split('@').first,
-          email: username,
-          password: password,
-        );
+      final id = await _userService.insertUser(newUser);
 
-        await _userService.insertUser(newUser);
+      await SessionService.saveSession(
+        userId: id,
+        email: newUser.email,
+        name: newUser.name,
+      );
 
-        _showSnackBar('Akun baru berhasil dibuat', Colors.green);
-        _goToHome();
-        return;
-      }
-
-      // ======================
-      // USER ADA → CEK PASSWORD
-      // ======================
-      if (existingUser.password != password) {
-        _showSnackBar('Password salah. Silakan masukkan kembali.', Colors.red);
-        return;
-      }
-
-      // ======================
-      // LOGIN BERHASIL
-      // ======================
-      _showSnackBar('Login berhasil', Colors.green);
-      _goToHome();
-    } catch (e) {
-      _showSnackBar('Terjadi kesalahan saat login', Colors.red);
-    } finally {
-      setState(() => _isLoading = false);
+      _goToHome(newUser.name);
+      return;
     }
+
+    // USER ADA
+    final user = existingUser.first;
+
+    if (user.password != password) {
+      _showError('Password salah, silakan coba lagi');
+      return;
+    }
+
+    await SessionService.saveSession(
+      userId: user.id!,
+      email: user.email,
+      name: user.name,
+    );
+
+    _goToHome(user.name);
   }
 
-  // =====================
-  // HELPER METHODS
-  // =====================
-  void _goToHome() {
+  void _goToHome(String username) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => TaskListScreen()),
     );
   }
 
-  void _showSnackBar(String message, Color color) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: color));
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  // =====================
-  // UI
-  // =====================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,9 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 40),
 
-              // =====================
-              // USERNAME
-              // =====================
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
@@ -137,9 +110,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
 
-              // =====================
-              // PASSWORD
-              // =====================
               TextField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
@@ -152,11 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? Icons.visibility_off
                           : Icons.visibility,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -165,28 +132,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24),
 
-              // =====================
-              // LOGIN BUTTON
-              // =====================
               ElevatedButton(
-                onPressed: _isLoading ? null : _login,
+                onPressed: _login,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
                 ),
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        'MASUK',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                child: const Text(
+                  'MASUK',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
