@@ -25,6 +25,7 @@ class _MapsScreenState extends State<MapsScreen> {
   List<Task> _tasksWithLocation = [];
   List<POI> _pois = [];
   bool _loadingPOI = true;
+  bool _isSatellite = true;
 
   LatLng _currentCenter = LatLng(-6.175392, 106.827153);
   LatLng? _lastPOICenter;
@@ -127,6 +128,24 @@ class _MapsScreenState extends State<MapsScreen> {
           fontWeight: FontWeight.bold,
         ),
         backgroundColor: Colors.blue,
+        actions: [
+          Row(
+            children: [
+              const Icon(Icons.map, size: 18),
+              Switch(
+                value: _isSatellite,
+                activeColor: Colors.white,
+                onChanged: (value) {
+                  setState(() {
+                    _isSatellite = value;
+                  });
+                },
+              ),
+              const Icon(Icons.satellite_alt, size: 18),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ],
       ),
       body: FlutterMap(
         mapController: _mapController,
@@ -143,12 +162,15 @@ class _MapsScreenState extends State<MapsScreen> {
 
         children: [
           // =====================
-          // TILE LAYER (SATELIT)
+          // TILE LAYER
           // =====================
           TileLayer(
-            urlTemplate:
-                'https://server.arcgisonline.com/ArcGIS/rest/services/'
-                'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            urlTemplate: _isSatellite
+                // SATELIT (ESRI)
+                ? 'https://server.arcgisonline.com/ArcGIS/rest/services/'
+                      'World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                // JALAN RAYA (OSM)
+                : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.taskmap',
           ),
 

@@ -22,23 +22,23 @@ class _TaskListScreenState extends State<TaskListScreen> {
     _loadTasks();
   }
 
-  Future<void> _updateStatus(Task task, String newStatus) async {
-    final updatedTask = Task(
-      id: task.id,
-      userId: task.userId,
-      title: task.title,
-      description: task.description,
-      category: task.category,
-      status: newStatus,
-      createdAt: task.createdAt,
-      deadline: task.deadline,
-      latitude: task.latitude,
-      longitude: task.longitude,
-    );
+  // Future<void> _updateStatus(Task task, String newStatus) async {
+  //   final updatedTask = Task(
+  //     id: task.id,
+  //     userId: task.userId,
+  //     title: task.title,
+  //     description: task.description,
+  //     category: task.category,
+  //     status: newStatus,
+  //     createdAt: task.createdAt,
+  //     deadline: task.deadline,
+  //     latitude: task.latitude,
+  //     longitude: task.longitude,
+  //   );
 
-    await _taskService.updateTask(updatedTask);
-    _loadTasks();
-  }
+  //   await _taskService.updateTask(updatedTask);
+  //   _loadTasks();
+  // }
 
   Future<void> _loadTasks() async {
     final data = await _taskService.getTasks();
@@ -47,9 +47,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
     });
   }
 
-  void _showSnack(String text) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
-  }
+  // void _showSnack(String text) {
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  // }
 
   void _goToAddTask() async {
     await Navigator.push(
@@ -240,27 +240,27 @@ class _TaskListScreenState extends State<TaskListScreen> {
   // =====================
   // SWIPE BACKGROUND
   // =====================
-  Widget _buildSwipeBg({
-    required Color color,
-    required IconData icon,
-    required String text,
-    required bool alignLeft,
-  }) {
-    return Container(
-      color: color,
-      alignment: alignLeft ? Alignment.centerLeft : Alignment.centerRight,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (!alignLeft) Text(text, style: _swipeTextStyle),
-          Icon(icon, color: Colors.white, size: 32),
-          if (alignLeft) Text(text, style: _swipeTextStyle),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSwipeBg({
+  //   required Color color,
+  //   required IconData icon,
+  //   required String text,
+  //   required bool alignLeft,
+  // }) {
+  //   return Container(
+  //     color: color,
+  //     alignment: alignLeft ? Alignment.centerLeft : Alignment.centerRight,
+  //     padding: const EdgeInsets.symmetric(horizontal: 20),
+  //     child: Row(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         if (!alignLeft) Text(text, style: _swipeTextStyle),
+  //         Icon(icon, color: Colors.white, size: 32),
+  //         if (alignLeft) Text(text, style: _swipeTextStyle),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  TextStyle get _swipeTextStyle =>
-      const TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
+  // TextStyle get _swipeTextStyle =>
+  //     const TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
 }

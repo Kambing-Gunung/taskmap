@@ -20,6 +20,22 @@ class UserService {
     return maps.map((map) => User.fromMap(map)).toList();
   }
 
+  // GET USER BY EMAIL / USERNAME
+  Future<User?> getUserByEmail(String email) async {
+    final db = await _dbService.database;
+    final result = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return User.fromMap(result.first);
+    }
+    return null;
+  }
+
   // UPDATE
   Future<int> updateUser(User user) async {
     final db = await _dbService.database;
