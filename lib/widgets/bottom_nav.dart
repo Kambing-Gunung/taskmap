@@ -6,7 +6,7 @@ import '/screens/maps_screen.dart';
 class BottomNav extends StatelessWidget {
   final int currentIndex;
 
-  BottomNav({required this.currentIndex});
+  const BottomNav({super.key, required this.currentIndex});
 
   void _onTap(BuildContext context, int index) {
     Widget page;

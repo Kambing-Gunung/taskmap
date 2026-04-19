@@ -6,6 +6,8 @@ void main() {
 }
 
 class TaskMapApp extends StatelessWidget {
+  const TaskMapApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
