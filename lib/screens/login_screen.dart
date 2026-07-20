@@ -1,24 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'task_list_screen.dart';
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Login')),
-      body: Center(
-        child: ElevatedButton(
-          child: Text('Masuk'),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => TaskListScreen()),
-            );
-          },
-=======
 import '../models/user.dart';
 import '../services/user_service.dart';
 import '../services/session_service.dart';
@@ -169,7 +149,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
->>>>>>> working
         ),
       ),
     );

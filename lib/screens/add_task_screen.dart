@@ -1,17 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import '/widgets/bottom_nav.dart';
-
-class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Add Task')),
-      body: Center(child: Text('Tambah Task')),
-      bottomNavigationBar: BottomNav(currentIndex: 0),
-=======
 import 'package:latlong2/latlong.dart';
 
 import '../models/task.dart';
@@ -281,7 +268,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
         ),
       ),
->>>>>>> working
     );
   }
 }

@@ -34,12 +34,9 @@ class BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
-<<<<<<< HEAD
-=======
       backgroundColor: Colors.blue,
       selectedItemColor: Colors.white,
 
->>>>>>> working
       onTap: (index) => _onTap(context, index),
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),

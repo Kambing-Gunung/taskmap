@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
-<<<<<<< HEAD
-
-void main() {
-  runApp(TaskMapApp());
-}
-
-class TaskMapApp extends StatelessWidget {
-  const TaskMapApp({super.key});
-=======
 import 'screens/task_list_screen.dart';
 import 'services/session_service.dart';
 
@@ -26,20 +17,12 @@ class MyApp extends StatelessWidget {
   final String? userName;
 
   const MyApp({super.key, required this.isLoggedIn, this.userName});
->>>>>>> working
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
-      title: 'TaskMap',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginScreen(),
-=======
       debugShowCheckedModeBanner: false,
       home: isLoggedIn ? TaskListScreen() : const LoginScreen(),
->>>>>>> working
     );
   }
 }

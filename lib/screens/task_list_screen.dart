@@ -1,26 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import '/widgets/bottom_nav.dart';
-import 'add_task_screen.dart';
-
-class TaskListScreen extends StatelessWidget {
-  const TaskListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Task List')),
-      body: Center(
-        child: ElevatedButton(
-          child: Text('Daftar Task'),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AddTaskScreen()),
-            );
-          },
-        ),
-=======
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../services/task_service.dart';
@@ -234,13 +212,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _goToAddTask,
         child: const Icon(Icons.add),
->>>>>>> working
       ),
       bottomNavigationBar: BottomNav(currentIndex: 0),
     );
   }
-<<<<<<< HEAD
-=======
 
   // =====================
   // STATUS ICON
@@ -284,5 +259,4 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   // TextStyle get _swipeTextStyle =>
   //     const TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
->>>>>>> working
 }
