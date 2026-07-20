@@ -10,6 +10,8 @@ import '../screens/login_screen.dart';
 import '../widgets/bottom_nav.dart';
 
 class TaskListScreen extends StatefulWidget {
+  const TaskListScreen({super.key});
+
   @override
   _TaskListScreenState createState() => _TaskListScreenState();
 }

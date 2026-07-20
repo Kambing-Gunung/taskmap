@@ -134,7 +134,7 @@ class _MapsScreenState extends State<MapsScreen> {
               const Icon(Icons.map, size: 18),
               Switch(
                 value: _isSatellite,
-                activeColor: Colors.white,
+                activeThumbColor: Colors.white,
                 onChanged: (value) {
                   setState(() {
                     _isSatellite = value;

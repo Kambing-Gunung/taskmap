@@ -19,21 +19,21 @@ Future<LatLng?> showLocationPickerDialog(
       LatLng currentCenter =
           initialLocation ?? const LatLng(-6.175392, 106.827153);
 
-      List<POI> _pois = [];
-      bool _loadingPOI = false;
+      List<POI> pois = [];
+      bool loadingPOI = false;
       Timer? debounce;
 
       Future<void> loadPOI(void Function(void Function()) setState) async {
         try {
-          setState(() => _loadingPOI = true);
-          _pois = await POIService.fetchPOIs(
+          setState(() => loadingPOI = true);
+          pois = await POIService.fetchPOIs(
             lat: currentCenter.latitude,
             lng: currentCenter.longitude,
           );
         } catch (e) {
           debugPrint('POI dialog error: $e');
         }
-        setState(() => _loadingPOI = false);
+        setState(() => loadingPOI = false);
       }
 
       return StatefulBuilder(
@@ -79,7 +79,7 @@ Future<LatLng?> showLocationPickerDialog(
                   // POI MARKER
                   // =====================
                   MarkerLayer(
-                    markers: _pois.map((poi) {
+                    markers: pois.map((poi) {
                       return Marker(
                         point: LatLng(poi.latitude, poi.longitude),
                         width: 40,
@@ -128,7 +128,7 @@ Future<LatLng?> showLocationPickerDialog(
                         ),
                       ],
                     ),
-                  if (_pois.isEmpty && !_loadingPOI)
+                  if (pois.isEmpty && !loadingPOI)
                     Positioned(
                       bottom: 20,
                       left: 20,
@@ -146,7 +146,7 @@ Future<LatLng?> showLocationPickerDialog(
                         ),
                       ),
                     ),
-                  if (_loadingPOI)
+                  if (loadingPOI)
                     const Positioned(
                       top: 10,
                       right: 10,
@@ -167,7 +167,7 @@ Future<LatLng?> showLocationPickerDialog(
                   const Icon(Icons.map, size: 18),
                   Switch(
                     value: isSatellite,
-                    activeColor: Colors.blue,
+                    activeThumbColor: Colors.blue,
                     onChanged: (value) {
                       setState(() {
                         isSatellite = value;
